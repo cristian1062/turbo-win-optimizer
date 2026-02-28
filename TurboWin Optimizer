@@ -1,0 +1,38 @@
+@echo off
+title TurboWin - Otimizador de Windows
+color 0A
+
+echo ==============================
+echo      TURBOWIN OTIMIZADOR
+echo ==============================
+echo.
+
+echo Limpando arquivos temporarios...
+del /s /f /q %temp%\* >nul 2>&1
+del /s /f /q C:\Windows\Temp\* >nul 2>&1
+
+echo Limpando DNS...
+ipconfig /flushdns >nul
+
+echo Esvaziando lixeira...
+PowerShell.exe -NoProfile -Command "Clear-RecycleBin -Force" >nul 2>&1
+
+echo Desativando servicos pesados...
+
+sc stop "SysMain" >nul 2>&1
+sc config "SysMain" start=disabled >nul 2>&1
+
+sc stop "WSearch" >nul 2>&1
+sc config "WSearch" start=disabled >nul 2>&1
+
+echo Ajustando desempenho visual...
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f >nul
+
+echo Limpando cache de rede...
+netsh int ip reset >nul
+
+echo Finalizando...
+echo.
+
+echo Otimizacao concluida!
+pause
